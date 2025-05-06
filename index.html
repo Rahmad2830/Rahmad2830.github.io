@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <title>homepage</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+  </head>
+  <body style="background-color:#49AFED">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-4">
+            <input type="text" id="kota" placeholder="Masukkan nama kota" class="form-control mt-4">
+            <button class="btn btn-primary mt-3" id="cekCuaca" style="border-radius:20px">Cek Cuaca</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div id="hasil"></div>
+    <script>
+      $("#cekCuaca").on('click', function() {
+        let city = $("#kota").val()
+        if(city === '') {
+          alert("masukan kota terlebih dahulu")
+        }
+        
+      $.ajax({
+        type : "GET",
+        url :"http://api.weatherapi.com/v1/current.json",
+        data : {
+          key : "c01a66b9e627403ba0174246251304",
+          q : city
+        },
+        success : function(data) {
+          let kota = data.location.name
+          let waktu = data.location.localtime
+          let icon = data.current.condition.icon
+          let temp = data.current.temp_c
+          let weather = data.current.condition.text
+          let wind = data.current.wind_kph
+          let humidity = data.current.humidity
+          
+          $("#hasil").html(`
+            <div class="m-4">
+              <div class="container">
+                <div class="row text-center">
+                  <div class="col-md">
+                    <img src="${icon}" style="width: 200px">
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-4">
+            <div class="container">
+              <div class="row justify-content-center">
+                <div class="col-md-3">
+                  <div class="card text-center">
+                    <div class="card-body">
+                      <h1>${kota}</h1>
+                      <h5 class="card-title">${waktu}</h5>
+                      <h1 class="display-4" style="font-size: 100px">${temp}°</h1>
+                      <h3>${weather}</h3>
+                      <p class="lead mt-4">Wind : ${wind} kph</p>
+                      <p class="lead">Humidity : ${humidity}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          `)
+        }
+      })
+      })
+    </script>
+  </body>
+</html>
